@@ -1,3 +1,3 @@
-openai
-websocket-client
+modal
 requests
+websocket-client
