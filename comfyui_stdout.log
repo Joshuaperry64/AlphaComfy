@@ -1,0 +1,17 @@
+[START] Security scan
+[DONE] Security scan
+## ComfyUI-Manager: installing dependencies done.
+** ComfyUI startup time: 2026-08-13 19:42:18.590
+** Platform: Linux
+** Python version: 3.10.17 (main, May 21 2025, 23:32:05) [GCC 12.2.0]
+** Python executable: /usr/local/bin/python
+** ComfyUI Path: /root/ComfyUI
+** ComfyUI Base Folder Path: /root/ComfyUI
+** User directory: /root/ComfyUI/user
+** ComfyUI-Manager config path: /root/ComfyUI/user/__manager/config.ini
+** Log path: /root/ComfyUI/user/comfyui.log
+Cannot connect to comfyregistry.
+FETCH DATA from: https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/custom-node-list.json[ComfyUI-Manager] Due to a network error, switching to local mode.
+=> custom-node-list.json
+=> cannot schedule new futures after shutdown
+FETCH DATA from: /root/ComfyUI/custom_nodes/ComfyUI-Manager/custom-node-list.json [DONE]

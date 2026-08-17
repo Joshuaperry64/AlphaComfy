@@ -12,28 +12,285 @@ app = modal.App(APP_NAME)
 
 models_volume = modal.Volume.from_name(VOLUME_NAME, create_if_missing=True)
 
-# Container image: PyTorch CUDA + ComfyUI
+# Container image: PyTorch CUDA + ComfyUI + All Node Dependencies Baked In
 comfy_image = (
     modal.Image.debian_slim(python_version="3.10")
-    .apt_install("git", "ffmpeg", "libgl1-mesa-glx", "libglib2.0-0")
-    .pip_install(
+    .apt_install(
+        "git",
+        "ffmpeg",
+        "libgl1-mesa-glx",
+        "libglib2.0-0",
+        "ca-certificates",
+        "libsm6",
+        "libxext6",
+        "libxrender-dev",
+        "cmake",
+        "build-essential",
+    )
+    .uv_pip_install(
         "torch",
         "torchvision",
         "torchaudio",
         extra_index_url="https://download.pytorch.org/whl/cu121",
     )
-    .pip_install(
+    .uv_pip_install(
+        # Web & Core Frameworks
         "websocket-client",
         "requests",
         "pillow",
         "pyyaml",
-        "timm",
-        "einops",
-        "transformers",
-        "accelerate",
+        "aiohttp",
+        "aiosignal",
+        "aiohappyeyeballs",
+        "anyio",
+        "async-timeout",
+        "attrs",
+        "annotated-types",
+        "annotated-doc",
+        "fastapi",
+        "uvicorn",
+        "starlette",
+        "httpx",
+        "httpcore",
+        "httplib2",
+        "urllib3",
+        "chardet",
+        "certifi",
+        "charset-normalizer",
+        "idna",
+        "yarl",
+        "multidict",
+        "frozenlist",
+        "propcache",
+        "exceptiongroup",
+        "click",
+        "typer",
+        "rich",
+        "typing-extensions",
+        "typing-inspection",
+        "typeguard",
+        "toml",
+        "tomli",
+        "tomlkit",
+        "uv",
+        "psutil",
+        "packaging",
+        "platformdirs",
+        "filelock",
+        "fsspec",
+        "jinja2",
+        "markupsafe",
+        "tqdm",
+        "more-itertools",
+        "diskcache",
+        "cachetools",
+        # Git & GitHub
+        "gitpython",
+        "gitdb",
+        "smmap",
+        "PyGithub",
+        "matrix-nio",
+        # Cloud & APIs
+        "boto3",
+        "botocore",
+        "s3transfer",
+        "jmespath",
+        "huggingface_hub",
+        "hf-xet",
+        "hf-gradio",
+        "openai",
+        "openai-whisper",
+        "fal-client",
+        "runwayml",
+        "ollama",
+        "google-genai",
+        "google-generativeai",
+        "google-ai-generativelanguage",
+        "google-api-core",
+        "google-api-python-client",
+        "google-auth",
+        "google-auth-httplib2",
+        "googleapis-common-protos",
+        "google-cloud-storage",
+        "gdown",
+        "gradio",
+        "gradio-client",
+        "spaces",
+        "modelscope",
+        "modelscope-hub",
+        "aliyun-python-sdk-core",
+        "aliyun-python-sdk-kms",
+        "oss2",
+        "grpcio",
+        "grpcio-status",
+        "proto-plus",
+        "protobuf",
+        # Computer Vision & Deep Learning
+        "diffusers>=0.33.0",
+        "accelerate>=1.2.1",
+        "transformers>=4.46.2",
+        "tokenizers",
+        "datasets",
+        "einops>=0.7.0",
+        "safetensors",
+        "peft>=0.17.0",
+        "timm>=1.0.8",
+        "kornia>=0.8.2",
+        "kornia_rs",
+        "open_clip_torch>=2.29.0",
+        "sentencepiece>=0.2.0",
+        "spandrel",
+        "clip_interrogator",
+        "segment_anything",
+        "scikit-image",
+        "scikit-learn",
         "scipy",
+        "numba",
+        "llvmlite",
+        "dill",
+        "multiprocess",
+        "rotary_embedding_torch",
+        "torchdiffeq>=0.2.3",
+        "torchmetrics",
+        "torch_complex",
+        "torchcodec",
+        "tensorboardX",
+        "pytorch_lightning",
+        "lightning-utilities",
+        "fairscale",
+        "gguf>=0.17.1",
+        "llama-cpp-python",
+        "opencv-python-headless",
+        "albumentations",
+        "albucore",
+        "simsimd",
+        "stringzilla",
+        "pydantic",
+        "pydantic-core",
+        "piexif",
+        "webcolors",
+        "color-matcher",
+        "mss",
+        "pilgram",
+        "easydict",
+        "pywavelets",
+        "pycocotools",
+        "pycocoevalcap",
+        "contourpy",
+        "matplotlib",
+        "kiwisolver",
+        "cycler",
+        "fonttools",
+        "pyparsing",
+        "python-dateutil",
+        "pytz",
+        "tzdata",
+        "pandas",
+        "pyarrow",
+        "numpy",
+        "sympy",
+        "mpmath",
+        "tifffile",
+        "lazy_loader",
+        "pooch",
+        "rembg",
+        "pymatting",
+        "colour-science",
+        "transparent-background",
+        "pixeloe",
+        "jsonschema",
+        "jsonschema-specifications",
+        "referencing",
+        "rpds-py",
+        "qrcode[pil]",
+        "omegaconf>=2.3.0",
+        "hydra-core",
+        "antlr4-python3-runtime",
+        # Audio, Speech & Video
+        "librosa>=0.10.1",
+        "soundfile",
+        "sounddevice",
+        "audioread",
+        "soxr",
+        "pydub",
+        "pyloudnorm",
+        "demucs",
+        "stable-ts",
+        "funasr",
+        "voxcpm",
+        "sphn",
+        "julius",
+        "lameenc",
+        "imageio",
+        "imageio-ffmpeg",
+        "av",
+        "moviepy==1.0.3",
+        "decorator<5.0,>=4.0.2",
+        # Language, Text & Cryptography
+        "cryptography",
+        "pycryptodome",
+        "pyasn1",
+        "pyasn1-modules",
+        "rsa",
+        "ftfy>=6.1.1",
+        "tiktoken",
+        "regex",
+        "rapidfuzz",
+        "inflect",
+        "contractions",
+        "anyascii",
+        "textsearch",
+        "pyahocorasick",
+        "jieba",
+        "jamo",
+        "jaconv",
+        "wetext",
+        "sortedcontainers",
+        "docstring-parser",
+        "argbind",
+        "python-dotenv",
+        "python-multipart",
+        "safehttpx",
+        "msgpack",
+        "orjson",
+        "xxhash",
+        "crcmod",
+        "brotli",
+        "websockets",
+        "wget",
+        "addict",
+        "pathspec",
+        "markdown-it-py",
+        "mdurl",
+        "pygments",
+        "shellingham",
+        "simplejson",
+        "six",
+        "cffi",
+        "pycparser",
+        "beautifulsoup4",
+        "soupsieve",
+        "PySocks",
+        "uritemplate",
+        # PDF & Documents
+        "reportlab",
+        "PyPDF2",
+        "pdf2image",
+        "PyMuPDF",
+        # 3D / OpenGL / UI Rendering
         "PyOpenGL",
         "PyOpenGL-accelerate",
+        "glfw",
+        # Build Tools & Extra Libs
+        "Cython",
+        "scikit-build-core",
+        "semantic-version",
+        "umap-learn",
+        "pynndescent",
+        # WAS Node Suite Special Git Packages
+        "git+https://github.com/WASasquatch/cstr.git",
+        "git+https://github.com/WASasquatch/ffmpy.git",
+        "git+https://github.com/WASasquatch/img2texture.git",
     )
     .run_commands(
         "git clone https://github.com/comfyanonymous/ComfyUI.git /root/ComfyUI",
@@ -43,51 +300,52 @@ comfy_image = (
 
 
 def _setup_model_symlink():
-    """Shared setup: replace ComfyUI's default models dir with a symlink to the volume."""
+    """
+    Fast container setup:
+    - Symlinks ComfyUI models directory to the persistent Modal volume.
+    - Symlinks ComfyUI custom_nodes directory to the persistent Modal volume.
+    """
     import shutil
-    import sys
+    import os
 
+    # --- Models Symlink ---
     comfy_models = "/root/ComfyUI/models"
-
     if os.path.isdir(comfy_models) and not os.path.islink(comfy_models):
         shutil.rmtree(comfy_models)
-
     if not os.path.islink(comfy_models):
         os.symlink(MODELS_VOLUME_PATH, comfy_models)
-
+    
     for s in ["checkpoints", "loras", "vae", "clip", "controlnet", "embeddings", "upscale_models"]:
         os.makedirs(f"{MODELS_VOLUME_PATH}/{s}", exist_ok=True)
 
-    # Symlink any custom nodes from the volume into ComfyUI's custom_nodes folder
+    # --- Custom Nodes Symlink ---
     os.makedirs(CUSTOM_NODES_VOLUME_PATH, exist_ok=True)
     comfy_nodes_dir = "/root/ComfyUI/custom_nodes"
-    for item in os.listdir(CUSTOM_NODES_VOLUME_PATH):
-        src = os.path.join(CUSTOM_NODES_VOLUME_PATH, item)
-        dst = os.path.join(comfy_nodes_dir, item)
-        if not os.path.exists(dst):
-            os.symlink(src, dst)
-            # Install requirements if present
-            req_file = os.path.join(src, "requirements.txt")
-            if os.path.isfile(req_file):
-                print(f"Installing requirements for {item}...")
-                subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", req_file])
+
+    if os.path.isdir(comfy_nodes_dir) and not os.path.islink(comfy_nodes_dir):
+        shutil.rmtree(comfy_nodes_dir)
+
+    if not os.path.exists(comfy_nodes_dir):
+        os.symlink(CUSTOM_NODES_VOLUME_PATH, comfy_nodes_dir)
+
 
 
 # --------------------------------------------------------------------------
-# 1. CPU Mode — Free workflow editing ($0 idle, ~$0.03/hr active)
+# 1. CPU Mode
 # --------------------------------------------------------------------------
 @app.cls(
     image=comfy_image,
     volumes={"/vol": models_volume},
-    scaledown_window=300,  # Keep alive 5 min after last request while editing
+    scaledown_window=300,
     timeout=7200,
+    max_containers=1,
 )
 class ComfyUICPU:
     @modal.enter()
     def setup(self):
         _setup_model_symlink()
 
-    @modal.web_server(port=8188, startup_timeout=120.0)
+    @modal.web_server(port=8188, startup_timeout=180.0)
     def ui(self):
         subprocess.Popen(
             "python /root/ComfyUI/main.py --listen 0.0.0.0 --port 8188 --cpu",
@@ -96,21 +354,22 @@ class ComfyUICPU:
 
 
 # --------------------------------------------------------------------------
-# 2. GPU Mode — On-demand A10G for image generation
+# 2. GPU Mode
 # --------------------------------------------------------------------------
 @app.cls(
     gpu="A10G",
     image=comfy_image,
     volumes={"/vol": models_volume},
-    scaledown_window=60,  # Aggressive GPU shutdown after rendering
+    scaledown_window=60,
     timeout=3600,
+    max_containers=1,
 )
 class ComfyUIGPU:
     @modal.enter()
     def setup(self):
         _setup_model_symlink()
 
-    @modal.web_server(port=8188, startup_timeout=120.0)
+    @modal.web_server(port=8188, startup_timeout=180.0)
     def ui(self):
         subprocess.Popen(
             "python /root/ComfyUI/main.py --listen 0.0.0.0 --port 8188",
@@ -119,7 +378,7 @@ class ComfyUIGPU:
 
 
 # --------------------------------------------------------------------------
-# 3. Interactive Launcher — Lightweight control panel (CPU, $0 idle)
+# 3. Interactive Launcher
 # --------------------------------------------------------------------------
 launcher_image = modal.Image.debian_slim(python_version="3.10").pip_install("fastapi")
 
